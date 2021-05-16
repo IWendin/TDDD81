@@ -1,0 +1,103 @@
+Lab 3_A5
+Ingrid Wendin (ingwe018)
+Per Bark (perba583)
+
+Task 1
+
+a)
+Dec(FD2): {C} -> {A} (1) 
+Dec(FD1): {A} -> {B} (2) 
+Trans((1), (2)): {C} -> {B} (3)
+
+b)
+Dec(FD2): {C} -> {D} (1) 
+Dec(FD1): {A} -> {C} (2) 
+Trans((2), (1)): {A} -> {D} (3)
+Aug((3)): {A,E} -> {D,E} (4)
+Trans((4), FD3): {A,E} -> {F} (5)
+
+Task 2
+
+a)
+Start: X+ = {A}
+FD1 -> X+ = {A,B,C}
+FD2 -> X+ = {A,B,C,D} END
+
+b)
+Start: X+ = {C,E}
+FD2 -> X+ = {C,E,A,D}
+FD3 -> X+ = {C,E,A,D,F}
+FD1 -> X+ = {C,E,A,D,F,B} END
+
+Task 3
+
+a)
+A is only in the LHS -> must be part of CK (1)
+C and F are only in RHS -> cannot be part of CK (2)
+
+(1) and (2) -> possible in CK: {A,B,D,E} and must contain {A} -> {A,B}, {A,C}, {A,D}, {A,E} (A is not enough)
+
+Start: X+ = {A,B}
+FD1 -> X+ = {A,B,C,D,E,F} END;
+
+Start: X+ = {A,C} END;
+
+Start: X+ = {A,D}
+FD3 -> X+ = {A,D,B}
+FD1 -> X+ = {A,D,B,C,E,F} END;
+
+Start: X+ = {A,E}
+FD2 -> X+ = {A,E,F} END;
+
+Since the closure of both {A,B} and {A,D} contains all atributes and they are minimal, thus they are CK!
+
+b)
+R with the set F of FD, is BCNF if for every non trivial FD X -> Y in F+ we have that X is a superkey
+
+FD1 is BCNF since
+X = {A,B} -> X+ = {A,B,C,D,E,F} -> X is a superkey
+
+FD2 is not BCNF since (X does not have a superkey in LHS)
+X = {E} -> X+ = {E,F} -> X is not a superkey
+
+FD3 is not BCNF since (X does not have a superkey in LHS)
+X = {D} -> X+ = {D,B} -> X is not a superkey
+
+c)
+Decompose with FD2
+
+R1(E,F), FD2: {E} -> {F}, CK = {E} BCNF!
+R2(A,B,C,D,E), FD3: {D} -> {B} and FD4: {A,B} -> {C,D,E} (decomposed FD1), CK = {A,B}, {A,D} -> FD3 not BCNF!
+
+Decompose with FD3
+
+R2X(B,D), FD3: {D} -> {B}, CK = {D} BCNF!
+R2Y(A,C,D,E), FD5: {A,D} -> {C,E}, CK = {A,D} BCNF! (from trans(aug(FD3),FD4))
+
+Thus the final BCNF solution is with R1, R2X and R2Y all with FD:s as above
+
+Task 4
+
+a) Find CK for R:
+(1) E is only in RHS -> CK cannot contain E
+(2) B,C are only in LHS -> CK must contain B,C
+
+(2) -> try X={B,C}
+Start: X+ = {B,C}
+FD3 -> X+ = {B,C,D}
+FD2 -> X+ = {B,C,D,A,E} END
+
+X = {B,C} is minimal -> the only CK
+
+FD1 and FD2 have superkeys in LHS -> BCNF, but
+FD3 does not have superkey in LHS -> not BCNF! -> R not BCNF!
+
+b)
+Decomposed R based on FD3
+
+R1(C,D), FD3: {C} -> {D}, CK = {C}, BCNF!
+R2(A,B,C,E), dec(FD1) -> FD4: {A,B,C} -> {E}
+           aug(FD3): {B,C} -> {B,C,D} (1), trans((1),FD2) -> FD5: {B,C} -> {A,E}, CK = {B,C} BCNF!
+           Since LHS of FD4 contains LHS of FD5, thus FD can be reduced from FD4, FD5 to only FD5
+
+Thus the final BCNF solution is R1 and R2 as above
